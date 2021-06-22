@@ -10,7 +10,7 @@
   <script>
     const canvas = document.querySelector('canvas');
     const gl = canvas.getContext('webgl');
-    
+    // 创建顶点着色器
     const vertex = `
       attribute vec2 position;
       varying vec3 color;
@@ -21,6 +21,7 @@
       }
     `;
 
+    // 创建片元着色器
     const fragment = `
       precision mediump float;
       varying vec3 color;
