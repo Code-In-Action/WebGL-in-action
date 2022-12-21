@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="canvas" width="800px" height="800px"></canvas>
+  <svg id="svg"></svg>
+  <script>
+    const chartWidth = 300; // 条形图的宽度
+    const chartHeight = 200; // 条形图的高度
+    const data = [
+      { name: "questions", value: 37 },
+      { name: "schools", value: 25 },
+      { name: "philosophers", value: 15 },
+    ];
+    const names = Array.from(data, (d) => d.name);
+    const values = Array.from(data, (d) => d.value);
+    const indices = Array.from(data, (_, i) => i);
+    const vmax = Math.max(...values);
+    
+    const barHeights = Array.from(values, (v) => chartHeight * (v / vmax));
+    const nameColor = {
+      questions: "#5B8FF9",
+      philosophers: "#61DDAA",
+      schools: "#65789B",
+    };
+
+    const colors = Array.from(names, (name) => nameColor[name]);  
+
+    const step = chartWidth / names.length;
+    const barWidth = step * 0.8;
+    const xs = Array.from(indices, (i) => i * step);
+    const y = chartHeight;
+
+    const canvas = document.getElementById("canvas");
+    
+    const context = canvas.getContext("2d");
+    context.scale(2, 2); // 抵消将画布宽高设置为样式宽高两倍的影响
+
+    context.translate(15, 15); // 将坐标原点移动到绘制图表的区域
+
+    for (const index of indices) {
+      // 将需要绘制的属性取出来
+      const color = colors[index];
+      const x = xs[index];
+      const barHeight = barHeights[index];
+      const value = values[index];
+      // 绘制条
+      context.fillStyle = color;
+      context.fillRect(x, y - barHeight, barWidth, barHeight);
+
+      // 绘制值
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.fillStyle = "white";
+      context.font = "25px PingFangSC-Regular, sans-serif";
+      context.fillText(value, x + barWidth / 2, y - barHeight / 2);
+    }
+
+    // SVG
+    function createSVGElement(type) {
+      return document.createElementNS("http://www.w3.org/2000/svg", type);
+    }
+
+    const svg = document.getElementById("svg");
+    // 设置 svg 的坐标原点和大小
+    svg.setAttribute("width", 800);
+    svg.setAttribute("height", 800);
+    svg.setAttribute("viewBox", [0, 0, 800, 800]);
+
+    // 创建一个 g 元素用于平移
+    const g = createSVGElement("g");
+    g.setAttribute("transform", `translate(${15}, ${15})`);
+    svg.appendChild(g);
+
+    for (const index of indices) {
+      // 取得对应的属性
+      const color = colors[index];
+      const x = xs[index];
+      const barHeight = barHeights[index];
+      const value = values[index];
+
+      // 绘制条
+      const rect = createSVGElement("rect");
+      rect.setAttribute("x", x);
+      rect.setAttribute("y", y - barHeight);
+      rect.setAttribute("fill", color);
+      rect.setAttribute("width", barWidth);
+      rect.setAttribute("height", barHeight);
+      g.appendChild(rect);
+
+      // 绘制值
+      const text = createSVGElement("text");
+      text.textContent = value;
+      text.setAttribute("text-anchor", "middle");
+      text.setAttribute("fill", "white");
+      text.setAttribute("font-family", "PingFangSC-Regular, sans-serif");
+      text.setAttribute('font-size', 25);
+      text.setAttribute("alignment-baseline", "middle");
+      text.setAttribute("x", x + barWidth / 2);
+      text.setAttribute("y", y - barHeight / 2);
+
+      g.appendChild(text);
+    }
+  </script>
+</body>
+</html>

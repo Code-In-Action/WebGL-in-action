@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  
+</head>
+<body>
+  <!-- <svg height="60" width="200">
+    <text x="0" y="15" fill="blue" transform="rotate(30 20,50)">Example text</text>
+  </svg>
+
+  <svg height="0">
+    <filter id="f1">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+  </svg>
+
+  <svg width="230" height="120" xmlns="http://www.w3.org/2000/svg">
+    <filter id="blurMe">
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+   
+    <circle cx="60" cy="60" r="50" fill="green" />
+   
+    <circle cx="170" cy="60" r="50" fill="green"
+             filter="url(#blurMe)" />
+   </svg> -->
+   <div id="svgContainer"></div>
+   
+</body>
+<script>
+    const container = document.getElementById("svgContainer");
+    const mySvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    mySvg.setAttribute("version", "1.1");
+    container.appendChild(mySvg); // svg
+
+    const obj = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    obj.setAttribute("width", "90");
+    obj.setAttribute("height", "90"); // shape
+
+    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs"); //defs
+
+    const filter = document.createElementNS("http://www.w3.org/2000/svg", "filter"); // filter
+    filter.setAttribute("id","f1");
+    filter.setAttribute("x","0");
+    filter.setAttribute("y","0");
+
+    const gaussianFilter = document.createElementNS("http://www.w3.org/2000/svg", "feGaussianBlur"); // blur
+    gaussianFilter.setAttribute("in","SourceGraphic");
+    gaussianFilter.setAttribute("stdDeviation","15");
+
+    filter.appendChild(gaussianFilter);
+    defs.appendChild(filter);
+    
+    mySvg.appendChild(defs);    
+    obj.setAttribute("filter","url(#f1)");
+
+    mySvg.appendChild(obj);
+</script>
+</html>
